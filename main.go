@@ -5,5 +5,8 @@ import (
 )
 
 func main() {
-	http.Execute()
+	url := "https://google.com"
+	method := "GET"
+
+	http.Execute(method, url)
 }

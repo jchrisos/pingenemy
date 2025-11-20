@@ -6,10 +6,10 @@ import (
 	"net/http"
 )
 
-func Execute(url string, method string) {
-	req, _ := http.NewRequest(url, method, nil)
+func Execute(method string, url string) {
+	req, _ := http.NewRequest(method, url, nil)
 
-	client := http.Client{}
+	client := &http.Client{}
 
 	resp, err := client.Do(req)
 
