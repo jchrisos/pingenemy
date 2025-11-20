@@ -1,7 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"github.com/jchrisos/pingenemy/internal/http"
+)
 
 func main() {
-	fmt.Println("Hello")
+	http.Execute()
 }
