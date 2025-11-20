@@ -5,4 +5,4 @@ run:
 	go run main.go
 
 execute:
-	./pingenemy
+	./bin/pingenemy
