@@ -4,5 +4,5 @@ all:
 run:
 	go run main.go
 
-execute:
+execute: all
 	./bin/pingenemy
