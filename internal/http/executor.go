@@ -1,13 +1,21 @@
 package http
 
 import (
-	"fmt"
 	"log"
 	"net/http"
+	"strings"
 )
 
-func Execute(method string, url string) {
-	req, _ := http.NewRequest(method, url, nil)
+const (
+	SUCCESS_MIN = 200
+	SUCCESS_MAX = 299
+)
+
+type HttpExecutor struct {
+}
+
+func (s *HttpExecutor) Execute(method string, url string) (bool, error) {
+	req, _ := http.NewRequest(strings.ToUpper(method), url, nil)
 
 	client := &http.Client{}
 
@@ -15,9 +23,10 @@ func Execute(method string, url string) {
 
 	if err != nil {
 		log.Printf("Error calling url: %s", url)
+		return false, err
 	}
 
-	if resp.StatusCode == 200 {
-		fmt.Println("OK")
-	}
+	isSuccess := resp.StatusCode >= SUCCESS_MIN && resp.StatusCode <= SUCCESS_MAX
+
+	return isSuccess, nil
 }
