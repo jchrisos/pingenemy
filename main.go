@@ -4,15 +4,19 @@ import (
 	"fmt"
 
 	"github.com/jchrisos/pingenemy/internal/http"
+	"github.com/jchrisos/pingenemy/internal/url"
 )
 
 func main() {
-	url := "https://google.com"
-	method := "GET"
+	url1 := &url.UrlRequest{
+		URL:                "https://google.com",
+		HttpMethod:         "GET",
+		ExpectedStatusCode: 200,
+	}
 
 	exec := &http.HttpExecutor{}
 
-	success, err := exec.Execute(method, url)
+	success, err := exec.Execute(url1)
 	if err != nil {
 		panic("Failed to calling url")
 	}

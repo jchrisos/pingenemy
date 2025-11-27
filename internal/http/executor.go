@@ -4,29 +4,23 @@ import (
 	"log"
 	"net/http"
 	"strings"
-)
 
-const (
-	SUCCESS_MIN = 200
-	SUCCESS_MAX = 299
+	"github.com/jchrisos/pingenemy/internal/url"
 )
 
 type HttpExecutor struct {
 }
 
-func (s *HttpExecutor) Execute(method string, url string) (bool, error) {
-	req, _ := http.NewRequest(strings.ToUpper(method), url, nil)
+func (s *HttpExecutor) Execute(urlReq *url.UrlRequest) (bool, error) {
+	req, _ := http.NewRequest(strings.ToUpper(urlReq.HttpMethod), urlReq.URL, nil)
 
 	client := &http.Client{}
 
 	resp, err := client.Do(req)
-
 	if err != nil {
-		log.Printf("Error calling url: %s", url)
+		log.Printf("Error calling url: %s", urlReq.URL)
 		return false, err
 	}
 
-	isSuccess := resp.StatusCode >= SUCCESS_MIN && resp.StatusCode <= SUCCESS_MAX
-
-	return isSuccess, nil
+	return resp.StatusCode == urlReq.ExpectedStatusCode, nil
 }
