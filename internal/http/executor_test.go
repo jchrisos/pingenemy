@@ -13,6 +13,7 @@ func TestExecute(t *testing.T) {
 		URL:                "https://google.com",
 		HttpMethod:         "GET",
 		ExpectedStatusCode: 200,
+		IntervalSeconds:    1,
 	}
 
 	exec := &HttpExecutor{}
