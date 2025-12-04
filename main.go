@@ -8,7 +8,8 @@ import (
 )
 
 func main() {
-	url1 := &url.UrlRequest{
+	url := &url.UrlRequest{
+		Name:               "google",
 		URL:                "https://google.com",
 		HttpMethod:         "GET",
 		ExpectedStatusCode: 200,
@@ -16,7 +17,7 @@ func main() {
 
 	exec := &http.HttpExecutor{}
 
-	success, err := exec.Execute(url1)
+	success, err := exec.Execute(url)
 	if err != nil {
 		panic("Failed to calling url")
 	}

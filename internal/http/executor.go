@@ -18,7 +18,7 @@ func (s *HttpExecutor) Execute(urlReq *url.UrlRequest) (bool, error) {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Printf("Error calling url: %s", urlReq.URL)
+		log.Printf("Error calling %s url: %s", urlReq.Name, urlReq.URL)
 		return false, err
 	}
 
