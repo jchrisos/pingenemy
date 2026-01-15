@@ -2,13 +2,14 @@ package http
 
 import (
 	"testing"
-
-	"github.com/jchrisos/pingenemy/internal/url"
 )
 
-func TestExecute(t *testing.T) {
+const (
+	timeoutMillis int64 = 1000
+)
 
-	url := &url.UrlRequest{
+func TestCall(t *testing.T) {
+	url := &UrlRequest{
 		Name:               "google",
 		URL:                "https://google.com",
 		HttpMethod:         "GET",
@@ -16,12 +17,11 @@ func TestExecute(t *testing.T) {
 		IntervalSeconds:    1,
 	}
 
-	exec := &HttpExecutor{}
+	client := NewHttpClientTest(int64(timeoutMillis))
 
-	result, _ := exec.Execute(url)
+	result, _, _ := client.Call(t.Context(), url)
 
 	if !result {
 		t.Errorf("Test failed. result: %v, expected: %v", result, true)
 	}
-
 }

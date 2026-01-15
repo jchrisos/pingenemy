@@ -2,53 +2,37 @@ package main
 
 import (
 	"context"
-	"fmt"
-	"time"
 
 	"github.com/jchrisos/pingenemy/internal/http"
-	"github.com/jchrisos/pingenemy/internal/url"
+	"github.com/jchrisos/pingenemy/internal/job"
 )
 
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	url := &url.UrlRequest{
-		Name:               "google",
-		URL:                "https://google.com",
-		HttpMethod:         "GET",
-		ExpectedStatusCode: 200,
-		IntervalSeconds:    5,
+	urls := []http.UrlRequest{
+		{
+			Name:               "google",
+			URL:                "https://google.com",
+			HttpMethod:         "GET",
+			ExpectedStatusCode: 200,
+			IntervalSeconds:    2,
+		},
+		{
+			Name:               "uol",
+			URL:                "https://uol.com.br",
+			HttpMethod:         "GET",
+			ExpectedStatusCode: 200,
+			IntervalSeconds:    5,
+		},
 	}
 
-	go executeUrl(ctx, url)
+	job := &job.Job{}
+
+	for _, url := range urls {
+		go job.Execute(ctx, &url)
+	}
 
 	select {}
-}
-
-func executeUrl(ctx context.Context, urlReq *url.UrlRequest) {
-	interval := time.Duration(urlReq.IntervalSeconds) * time.Second
-	ticker := time.NewTicker(interval)
-	defer ticker.Stop()
-
-	exec := &http.HttpExecutor{}
-
-	for {
-		select {
-		case <-ctx.Done():
-			fmt.Println("Job is done")
-			return
-		case <-ticker.C:
-			func() {
-				success, err := exec.Execute(urlReq)
-				if err != nil {
-					panic("Failed to calling url")
-				}
-
-				if success {
-					fmt.Println("OK")
-				}
-			}()
-		}
-	}
 }

@@ -1,4 +1,4 @@
-package url
+package http
 
 type UrlRequest struct {
 	Name               string
