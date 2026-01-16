@@ -1,9 +1,9 @@
 package http
 
 type UrlRequest struct {
-	Name               string
-	URL                string
-	HttpMethod         string
-	ExpectedStatusCode int
-	IntervalSeconds    int
+	Name               string `json:"name"`
+	URL                string `json:"url"`
+	HttpMethod         string `json:"httpMethod"`
+	ExpectedStatusCode int    `json:"expectedStatusCode"`
+	IntervalSeconds    int    `json:"intervalSeconds"`
 }

@@ -31,7 +31,7 @@ func (j *Job) Execute(ctx context.Context, urlReq *http.UrlRequest) {
 				}
 
 				if success {
-					fmt.Printf("OK - %s\t\t response time: %d\n", urlReq.Name, respTime)
+					fmt.Printf("OK - %s response time: %d\n", urlReq.Name, respTime)
 				}
 			}()
 		}
