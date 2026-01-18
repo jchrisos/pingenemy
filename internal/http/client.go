@@ -11,7 +11,7 @@ import (
 var (
 	undefinedResult = UrlResult{
 		Success:      false,
-		StatusCode:   "Undefined",
+		StatusCode:   " - ",
 		ResponseTime: 0,
 	}
 )

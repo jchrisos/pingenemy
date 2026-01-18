@@ -32,7 +32,10 @@ func (j *Job) Execute(ctx context.Context, urlReq *http.UrlRequest) {
 			func() {
 				result := client.Call(ctx, urlReq)
 
-				message := fmt.Sprintf("%-10s status code: %-9s response time: %-3d url: %-40s", urlReq.Name, result.StatusCode, result.ResponseTime, urlReq.URL)
+				duration := time.Duration(result.ResponseTime) * time.Millisecond
+				durationFmt := fmt.Sprintf("%.3fs", duration.Seconds())
+
+				message := fmt.Sprintf("%-10s sc: %-3s rt: %-6s url: %-60s", urlReq.Name, result.StatusCode, durationFmt, urlReq.URL)
 
 				if result.Success {
 					fmt.Printf(printSuccess, message)
