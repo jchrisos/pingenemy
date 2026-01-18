@@ -8,6 +8,11 @@ import (
 	"github.com/jchrisos/pingenemy/internal/http"
 )
 
+const (
+	printSuccess = "\033[1;30;102m %s \033[0m"
+	printError   = "\033[1;97;101m %s \033[0m"
+)
+
 type Job struct {
 }
 
@@ -27,12 +32,14 @@ func (j *Job) Execute(ctx context.Context, urlReq *http.UrlRequest) {
 			func() {
 				result := client.Call(ctx, urlReq)
 
-				var status = "NOK"
-				if result.Success {
-					status = "OK"
-				}
+				message := fmt.Sprintf("%-10s status code: %-9s response time: %-3d url: %-40s", urlReq.Name, result.StatusCode, result.ResponseTime, urlReq.URL)
 
-				fmt.Printf("%s - %s response time: %d\n", status, urlReq.Name, result.ResponseTime)
+				if result.Success {
+					fmt.Printf(printSuccess, message)
+				} else {
+					fmt.Printf(printError, message)
+				}
+				fmt.Println("")
 			}()
 		}
 	}

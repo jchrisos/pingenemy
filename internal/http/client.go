@@ -8,6 +8,14 @@ import (
 	"time"
 )
 
+var (
+	undefinedResult = UrlResult{
+		Success:      false,
+		StatusCode:   "Undefined",
+		ResponseTime: 0,
+	}
+)
+
 type HttpClient struct {
 	timeout time.Duration
 }
@@ -30,11 +38,7 @@ func (c *HttpClient) Call(ctx context.Context, urlReq *UrlRequest) UrlResult {
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return UrlResult{
-			Success:      false,
-			StatusCode:   "Undefined",
-			ResponseTime: 0,
-		}
+		return undefinedResult
 	}
 	defer resp.Body.Close()
 
