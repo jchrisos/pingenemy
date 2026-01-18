@@ -9,6 +9,9 @@ import (
 )
 
 func main() {
+
+	// tui.NewTui().Start()
+
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
