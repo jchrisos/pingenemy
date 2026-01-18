@@ -19,9 +19,9 @@ func TestCall(t *testing.T) {
 
 	client := NewHttpClientTest(int64(timeoutMillis))
 
-	result, _, _ := client.Call(t.Context(), url)
+	result := client.Call(t.Context(), url)
 
-	if !result {
-		t.Errorf("Test failed. result: %v, expected: %v", result, true)
+	if !result.Success {
+		t.Errorf("Test failed. result.Success: %v, expected: %v", result, true)
 	}
 }

@@ -2,8 +2,8 @@ package http
 
 import (
 	"context"
-	"log"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -20,7 +20,7 @@ func NewHttpClientTest(millis int64) *HttpClient {
 	return &HttpClient{time.Duration(millis) * time.Millisecond}
 }
 
-func (c *HttpClient) Call(ctx context.Context, urlReq *UrlRequest) (bool, int64, error) {
+func (c *HttpClient) Call(ctx context.Context, urlReq *UrlRequest) UrlResult {
 	httpCtx, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
 
@@ -30,12 +30,19 @@ func (c *HttpClient) Call(ctx context.Context, urlReq *UrlRequest) (bool, int64,
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		log.Printf("Error calling %s url: %s", urlReq.Name, urlReq.URL)
-		return false, 0, err
+		return UrlResult{
+			Success:      false,
+			StatusCode:   "Undefined",
+			ResponseTime: 0,
+		}
 	}
 	defer resp.Body.Close()
 
 	elapsed := time.Since(start)
 
-	return resp.StatusCode == urlReq.ExpectedStatusCode, elapsed.Milliseconds(), nil
+	return UrlResult{
+		Success:      resp.StatusCode == urlReq.ExpectedStatusCode,
+		StatusCode:   strconv.Itoa(resp.StatusCode),
+		ResponseTime: elapsed.Milliseconds(),
+	}
 }

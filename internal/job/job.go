@@ -25,14 +25,14 @@ func (j *Job) Execute(ctx context.Context, urlReq *http.UrlRequest) {
 			return
 		case <-ticker.C:
 			func() {
-				success, respTime, err := client.Call(ctx, urlReq)
-				if err != nil {
-					fmt.Printf("Failed to calling url %s %s\n", urlReq.Name, err.Error())
+				result := client.Call(ctx, urlReq)
+
+				var status = "NOK"
+				if result.Success {
+					status = "OK"
 				}
 
-				if success {
-					fmt.Printf("OK - %s response time: %d\n", urlReq.Name, respTime)
-				}
+				fmt.Printf("%s - %s response time: %d\n", status, urlReq.Name, result.ResponseTime)
 			}()
 		}
 	}

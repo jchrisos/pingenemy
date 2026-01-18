@@ -7,3 +7,9 @@ type UrlRequest struct {
 	ExpectedStatusCode int    `json:"expectedStatusCode"`
 	IntervalSeconds    int    `json:"intervalSeconds"`
 }
+
+type UrlResult struct {
+	Success      bool
+	StatusCode   string
+	ResponseTime int64
+}
