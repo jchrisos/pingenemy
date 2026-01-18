@@ -2,7 +2,9 @@ package http
 
 import (
 	"encoding/json"
+	"log"
 	"os"
+	"path/filepath"
 )
 
 type UrlRetriever struct {
@@ -13,7 +15,14 @@ func NewUrl() *UrlRetriever {
 }
 
 func (u *UrlRetriever) RetriveUrls() ([]UrlRequest, error) {
-	fileBytes, err := os.ReadFile("urls.json")
+	home, err := os.UserHomeDir()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	path := filepath.Join(home, ".pingenemy", "urls.json")
+
+	fileBytes, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
