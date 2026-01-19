@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	printSuccess = "\033[1;30;102m %s \033[0m"
-	printError   = "\033[1;97;101m %s \033[0m"
+	successColor = "\033[1;30;102m %s \033[0m"
+	errorColor   = "\033[1;97;101m %s \033[0m"
 )
 
 type Job struct {
@@ -32,23 +32,26 @@ func (j *Job) Execute(ctx context.Context, urlReq *http.UrlRequest) {
 			func() {
 				result := client.Call(ctx, urlReq)
 
-				duration := time.Duration(result.ResponseTime) * time.Millisecond
-				durationFmt := fmt.Sprintf("%.3fs", duration.Seconds())
-
-				urlFmt := urlReq.URL
-				if len(urlReq.URL) > 50 {
-					urlFmt = urlReq.URL[:50] + "..."
-				}
-
-				message := fmt.Sprintf("%-20s sc: %-3s rt: %-6s url: %-53s", urlReq.Name, result.StatusCode, durationFmt, urlFmt)
-
-				if result.Success {
-					fmt.Printf(printSuccess, message)
-				} else {
-					fmt.Printf(printError, message)
-				}
-				fmt.Println("")
+				fmt.Println(j.formatMessage(*urlReq, result))
 			}()
 		}
 	}
+}
+
+func (j *Job) formatMessage(urlReq http.UrlRequest, result http.UrlResult) string {
+	duration := time.Duration(result.ResponseTime) * time.Millisecond
+	durationFmt := fmt.Sprintf("%.3fs", duration.Seconds())
+
+	urlFmt := urlReq.URL
+	if len(urlReq.URL) > 50 {
+		urlFmt = urlReq.URL[:50] + "..."
+	}
+
+	message := fmt.Sprintf("%-15s | sc: %-3s | rt: %-6s | %-53s", urlReq.Name, result.StatusCode, durationFmt, urlFmt)
+
+	if result.Success {
+		return fmt.Sprintf(successColor, message)
+	}
+
+	return fmt.Sprintf(errorColor, message)
 }
