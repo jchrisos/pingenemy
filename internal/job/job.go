@@ -35,7 +35,12 @@ func (j *Job) Execute(ctx context.Context, urlReq *http.UrlRequest) {
 				duration := time.Duration(result.ResponseTime) * time.Millisecond
 				durationFmt := fmt.Sprintf("%.3fs", duration.Seconds())
 
-				message := fmt.Sprintf("%-10s sc: %-3s rt: %-6s url: %-60s", urlReq.Name, result.StatusCode, durationFmt, urlReq.URL)
+				urlFmt := urlReq.URL
+				if len(urlReq.URL) > 50 {
+					urlFmt = urlReq.URL[:50] + "..."
+				}
+
+				message := fmt.Sprintf("%-20s sc: %-3s rt: %-6s url: %-53s", urlReq.Name, result.StatusCode, durationFmt, urlFmt)
 
 				if result.Success {
 					fmt.Printf(printSuccess, message)
