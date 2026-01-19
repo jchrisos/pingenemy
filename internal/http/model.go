@@ -6,6 +6,7 @@ type UrlRequest struct {
 	HttpMethod         string `json:"httpMethod"`
 	ExpectedStatusCode int    `json:"expectedStatusCode"`
 	IntervalSeconds    int    `json:"intervalSeconds"`
+	TimeoutMillis      int    `json:"timeoutMillis"`
 }
 
 type UrlResult struct {

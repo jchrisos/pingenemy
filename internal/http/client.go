@@ -2,6 +2,7 @@ package http
 
 import (
 	"context"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -21,15 +22,11 @@ type HttpClient struct {
 }
 
 func NewHttpClient() *HttpClient {
-	return &HttpClient{200 * time.Millisecond}
-}
-
-func NewHttpClientTest(millis int64) *HttpClient {
-	return &HttpClient{time.Duration(millis) * time.Millisecond}
+	return &HttpClient{}
 }
 
 func (c *HttpClient) Call(ctx context.Context, urlReq *UrlRequest) UrlResult {
-	httpCtx, cancel := context.WithTimeout(ctx, c.timeout)
+	httpCtx, cancel := context.WithTimeout(ctx, time.Duration(urlReq.TimeoutMillis))
 	defer cancel()
 
 	req, _ := http.NewRequestWithContext(httpCtx, strings.ToUpper(urlReq.HttpMethod), urlReq.URL, nil)
@@ -38,6 +35,7 @@ func (c *HttpClient) Call(ctx context.Context, urlReq *UrlRequest) UrlResult {
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
+		log.Fatal(err)
 		return undefinedResult
 	}
 	defer resp.Body.Close()

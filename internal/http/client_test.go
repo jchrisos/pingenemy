@@ -15,9 +15,10 @@ func TestCall(t *testing.T) {
 		HttpMethod:         "GET",
 		ExpectedStatusCode: 200,
 		IntervalSeconds:    1,
+		TimeoutMillis:      5000,
 	}
 
-	client := NewHttpClientTest(int64(timeoutMillis))
+	client := NewHttpClient()
 
 	result := client.Call(t.Context(), url)
 
