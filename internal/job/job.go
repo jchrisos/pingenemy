@@ -11,6 +11,7 @@ import (
 const (
 	successColor = "\033[1;30;102m %s \033[0m"
 	errorColor   = "\033[1;97;101m %s \033[0m"
+	maxLength    = 50
 )
 
 type Job struct {
@@ -43,8 +44,8 @@ func (j *Job) formatMessage(urlReq http.UrlRequest, result http.UrlResult) strin
 	durationFmt := fmt.Sprintf("%.3fs", duration.Seconds())
 
 	urlFmt := urlReq.URL
-	if len(urlReq.URL) > 50 {
-		urlFmt = urlReq.URL[:50] + "..."
+	if len(urlReq.URL) > maxLength {
+		urlFmt = urlReq.URL[:maxLength] + "..."
 	}
 
 	message := fmt.Sprintf("%-15s | sc: %-3s | rt: %-6s | %-53s", urlReq.Name, result.StatusCode, durationFmt, urlFmt)
