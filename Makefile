@@ -1,4 +1,7 @@
-all:
+all: test build
+	cp ./bin/pingenemy 
+
+build:
 	go build -ldflags "-w" -o bin/pingenemy
 
 run:
@@ -10,5 +13,5 @@ clean-test-cache:
 test: clean-test-cache
 	go list -f '{{.Dir}} {{.ImportPath}}' ./... | awk 'system("ls " $$1 "/*_test.go > /dev/null 2>&1") == 0 {print $$2}' | xargs go test
 
-execute: all
+execute: build
 	./bin/pingenemy
