@@ -1,5 +1,4 @@
 all: test build
-	cp ./bin/pingenemy 
 
 build:
 	go build -ldflags "-w" -o bin/pingenemy
