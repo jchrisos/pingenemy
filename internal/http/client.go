@@ -26,7 +26,7 @@ func NewHttpClient() *HttpClient {
 }
 
 func (c *HttpClient) Call(ctx context.Context, urlReq *UrlRequest) UrlResult {
-	httpCtx, cancel := context.WithTimeout(ctx, time.Duration(urlReq.TimeoutMillis))
+	httpCtx, cancel := context.WithTimeout(ctx, time.Duration(urlReq.TimeoutMillis)*time.Millisecond)
 	defer cancel()
 
 	req, _ := http.NewRequestWithContext(httpCtx, strings.ToUpper(urlReq.HttpMethod), urlReq.URL, nil)
@@ -35,7 +35,7 @@ func (c *HttpClient) Call(ctx context.Context, urlReq *UrlRequest) UrlResult {
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		return undefinedResult
 	}
 	defer resp.Body.Close()
