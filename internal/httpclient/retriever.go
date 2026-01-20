@@ -2,11 +2,12 @@ package httpclient
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 )
 
-func RetriveUrlsFromLocalFile() ([]UrlRequest, error) {
+func RetrieveUrlsFromLocalFile() ([]UrlRequest, error) {
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return nil, err
@@ -14,9 +15,25 @@ func RetriveUrlsFromLocalFile() ([]UrlRequest, error) {
 
 	path := filepath.Join(home, ".pingenemy", "urls.json")
 
+	fmt.Printf("Loading url files: %s\n", path)
+
 	fileBytes, err := os.ReadFile(path)
 	if err != nil {
-		return nil, err
+		file, err := os.Create(path)
+		if err != nil {
+			return nil, err
+		}
+		defer file.Close()
+
+		fileBytes, err = json.MarshalIndent(defaultUrls, "", "  ")
+		if err != nil {
+			return nil, err
+		}
+
+		_, err = file.Write(fileBytes)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	var urlRequests []UrlRequest

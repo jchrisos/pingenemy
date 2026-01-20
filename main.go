@@ -20,7 +20,7 @@ func main() {
 		stop()
 	}()
 
-	urls, err := httpclient.RetriveUrlsFromLocalFile()
+	urls, err := httpclient.RetrieveUrlsFromLocalFile()
 	if err != nil {
 		log.Fatal(err)
 	}

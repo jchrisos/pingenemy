@@ -4,21 +4,9 @@ import (
 	"testing"
 )
 
-const (
-	timeoutMillis int64 = 1000
-)
-
 func TestCall(t *testing.T) {
-	url := &UrlRequest{
-		Name:               "google",
-		URL:                "https://google.com",
-		HttpMethod:         "GET",
-		ExpectedStatusCode: 200,
-		IntervalSeconds:    1,
-		TimeoutMillis:      5000,
-	}
 
-	result, err := Call(t.Context(), url)
+	result, err := Call(t.Context(), &defaultUrls[0])
 	if err != nil {
 		t.Error(err)
 	}

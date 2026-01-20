@@ -14,3 +14,16 @@ type UrlResult struct {
 	StatusCode   string
 	ResponseTime int64
 }
+
+var (
+	defaultUrls = []UrlRequest{
+		{
+			Name:               "google",
+			URL:                "https://google.com",
+			HttpMethod:         "GET",
+			ExpectedStatusCode: 200,
+			IntervalSeconds:    5,
+			TimeoutMillis:      5000,
+		},
+	}
+)
