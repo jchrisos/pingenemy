@@ -16,7 +16,7 @@ import (
 func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer func() {
-		fmt.Println("\nJob is done")
+		fmt.Println("\nJob canceled")
 		stop()
 	}()
 
