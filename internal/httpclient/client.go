@@ -16,23 +16,26 @@ var (
 	}
 )
 
-func Call(ctx context.Context, urlReq *UrlRequest) (UrlResult, error) {
+func Call(ctx context.Context, urlReq *UrlRequest) (*UrlResult, error) {
 	httpCtx, cancel := context.WithTimeout(ctx, time.Duration(urlReq.TimeoutMillis)*time.Millisecond)
 	defer cancel()
 
-	req, _ := http.NewRequestWithContext(httpCtx, strings.ToUpper(urlReq.HttpMethod), urlReq.URL, nil)
+	req, err := http.NewRequestWithContext(httpCtx, strings.ToUpper(urlReq.HttpMethod), urlReq.URL, nil)
+	if err != nil {
+		return nil, err
+	}
 
 	start := time.Now()
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return undefinedResult, err
+		return &undefinedResult, err
 	}
 	defer resp.Body.Close()
 
 	elapsed := time.Since(start)
 
-	return UrlResult{
+	return &UrlResult{
 		Success:      resp.StatusCode == urlReq.ExpectedStatusCode,
 		StatusCode:   strconv.Itoa(resp.StatusCode),
 		ResponseTime: elapsed.Milliseconds(),

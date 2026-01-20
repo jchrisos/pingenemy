@@ -31,7 +31,7 @@ func Execute(ctx context.Context, urlReq *httpclient.UrlRequest) {
 					log.Printf("Error calling %s error=%v", urlReq.Name, err)
 				}
 
-				fmt.Println(FormatMessage(*urlReq, result))
+				fmt.Println(FormatMessage(*urlReq, *result))
 			}()
 		}
 	}
