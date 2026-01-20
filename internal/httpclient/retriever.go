@@ -7,14 +7,7 @@ import (
 	"path/filepath"
 )
 
-type UrlRetriever struct {
-}
-
-func NewUrl() *UrlRetriever {
-	return &UrlRetriever{}
-}
-
-func (u *UrlRetriever) RetriveUrls() ([]UrlRequest, error) {
+func RetriveUrlsFromLocalFile() ([]UrlRequest, error) {
 	home, err := os.UserHomeDir()
 	if err != nil {
 		log.Fatal(err)
