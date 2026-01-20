@@ -2,7 +2,6 @@ package httpclient
 
 import (
 	"encoding/json"
-	"log"
 	"os"
 	"path/filepath"
 )
@@ -10,7 +9,7 @@ import (
 func RetriveUrlsFromLocalFile() ([]UrlRequest, error) {
 	home, err := os.UserHomeDir()
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	path := filepath.Join(home, ".pingenemy", "urls.json")
