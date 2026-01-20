@@ -20,19 +20,23 @@ func Execute(ctx context.Context, urlReq *httpclient.UrlRequest) {
 	ticker := time.NewTicker(interval)
 	defer ticker.Stop()
 
+	call := func() {
+		result, err := httpclient.Call(ctx, urlReq)
+		if err != nil {
+			log.Printf("Error calling %s error=%v", urlReq.Name, err)
+		}
+
+		fmt.Println(FormatMessage(*urlReq, *result))
+	}
+
+	call()
+
 	for {
 		select {
 		case <-ctx.Done():
 			return
 		case <-ticker.C:
-			func() {
-				result, err := httpclient.Call(ctx, urlReq)
-				if err != nil {
-					log.Printf("Error calling %s error=%v", urlReq.Name, err)
-				}
-
-				fmt.Println(FormatMessage(*urlReq, *result))
-			}()
+			call()
 		}
 	}
 }
