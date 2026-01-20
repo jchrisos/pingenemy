@@ -20,7 +20,10 @@ func TestCall(t *testing.T) {
 
 	client := NewHttpClient()
 
-	result := client.Call(t.Context(), url)
+	result, err := client.Call(t.Context(), url)
+	if err != nil {
+		t.Error(err)
+	}
 
 	if !result.Success {
 		t.Errorf("Test failed. result.Success: %v, expected: %v", result, true)

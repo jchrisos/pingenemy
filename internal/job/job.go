@@ -3,6 +3,7 @@ package job
 import (
 	"context"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/jchrisos/pingenemy/internal/http"
@@ -28,7 +29,10 @@ func Execute(ctx context.Context, urlReq *http.UrlRequest) {
 			return
 		case <-ticker.C:
 			func() {
-				result := client.Call(ctx, urlReq)
+				result, err := client.Call(ctx, urlReq)
+				if err != nil {
+					log.Printf("Error calling %s error=%v", urlReq.Name, err)
+				}
 
 				fmt.Println(FormatMessage(*urlReq, result))
 			}()

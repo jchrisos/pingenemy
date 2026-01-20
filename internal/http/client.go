@@ -2,7 +2,6 @@ package http
 
 import (
 	"context"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -25,7 +24,7 @@ func NewHttpClient() *HttpClient {
 	return &HttpClient{}
 }
 
-func (c *HttpClient) Call(ctx context.Context, urlReq *UrlRequest) UrlResult {
+func (c *HttpClient) Call(ctx context.Context, urlReq *UrlRequest) (UrlResult, error) {
 	httpCtx, cancel := context.WithTimeout(ctx, time.Duration(urlReq.TimeoutMillis)*time.Millisecond)
 	defer cancel()
 
@@ -35,8 +34,7 @@ func (c *HttpClient) Call(ctx context.Context, urlReq *UrlRequest) UrlResult {
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		log.Print(err)
-		return undefinedResult
+		return undefinedResult, err
 	}
 	defer resp.Body.Close()
 
@@ -46,5 +44,5 @@ func (c *HttpClient) Call(ctx context.Context, urlReq *UrlRequest) UrlResult {
 		Success:      resp.StatusCode == urlReq.ExpectedStatusCode,
 		StatusCode:   strconv.Itoa(resp.StatusCode),
 		ResponseTime: elapsed.Milliseconds(),
-	}
+	}, nil
 }
