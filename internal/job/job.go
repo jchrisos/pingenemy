@@ -14,10 +14,7 @@ const (
 	maxLength    = 50
 )
 
-type Job struct {
-}
-
-func (j *Job) Execute(ctx context.Context, urlReq *http.UrlRequest) {
+func Execute(ctx context.Context, urlReq *http.UrlRequest) {
 	interval := time.Duration(urlReq.IntervalSeconds) * time.Second
 	ticker := time.NewTicker(interval)
 	defer ticker.Stop()
@@ -33,13 +30,13 @@ func (j *Job) Execute(ctx context.Context, urlReq *http.UrlRequest) {
 			func() {
 				result := client.Call(ctx, urlReq)
 
-				fmt.Println(j.formatMessage(*urlReq, result))
+				fmt.Println(FormatMessage(*urlReq, result))
 			}()
 		}
 	}
 }
 
-func (j *Job) formatMessage(urlReq http.UrlRequest, result http.UrlResult) string {
+func FormatMessage(urlReq http.UrlRequest, result http.UrlResult) string {
 	duration := time.Duration(result.ResponseTime) * time.Millisecond
 	durationFmt := fmt.Sprintf("%.3fs", duration.Seconds())
 

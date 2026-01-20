@@ -3,26 +3,31 @@ package main
 import (
 	"context"
 	"log"
+	"os"
+	"os/signal"
+	"sync"
+	"syscall"
 
 	"github.com/jchrisos/pingenemy/internal/http"
 	"github.com/jchrisos/pingenemy/internal/job"
 )
 
 func main() {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
 
 	urls, err := http.NewUrl().RetriveUrls()
 	if err != nil {
 		log.Fatal(err)
-		panic(err)
 	}
 
-	job := &job.Job{}
+	var wg sync.WaitGroup
 
 	for _, url := range urls {
-		go job.Execute(ctx, &url)
+		wg.Go(func() {
+			job.Execute(ctx, &url)
+		})
 	}
 
-	select {}
+	wg.Wait()
 }
