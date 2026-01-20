@@ -50,7 +50,7 @@ func FormatMessage(urlReq httpclient.UrlRequest, result httpclient.UrlResult) st
 		urlFmt = urlReq.URL[:maxLength] + "..."
 	}
 
-	message := fmt.Sprintf("%-15s | sc: %-3s | rt: %-6s | %-53s", urlReq.Name, result.StatusCode, durationFmt, urlFmt)
+	message := fmt.Sprintf("%-19s | sc: %-3s | rt: %-6s | %-53s", urlReq.Name, result.StatusCode, durationFmt, urlFmt)
 
 	if result.Success {
 		return fmt.Sprintf(successColor, message)
