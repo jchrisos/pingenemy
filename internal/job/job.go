@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/jchrisos/pingenemy/internal/http"
+	httpclient "github.com/jchrisos/pingenemy/internal/httpclient"
 )
 
 const (
@@ -15,17 +15,16 @@ const (
 	maxLength    = 50
 )
 
-func Execute(ctx context.Context, urlReq *http.UrlRequest) {
+func Execute(ctx context.Context, urlReq *httpclient.UrlRequest) {
 	interval := time.Duration(urlReq.IntervalSeconds) * time.Second
 	ticker := time.NewTicker(interval)
 	defer ticker.Stop()
 
-	client := http.NewHttpClient()
+	client := httpclient.NewHttpClient()
 
 	for {
 		select {
 		case <-ctx.Done():
-			fmt.Println("Job is done")
 			return
 		case <-ticker.C:
 			func() {
@@ -40,7 +39,7 @@ func Execute(ctx context.Context, urlReq *http.UrlRequest) {
 	}
 }
 
-func FormatMessage(urlReq http.UrlRequest, result http.UrlResult) string {
+func FormatMessage(urlReq httpclient.UrlRequest, result httpclient.UrlResult) string {
 	duration := time.Duration(result.ResponseTime) * time.Millisecond
 	durationFmt := fmt.Sprintf("%.3fs", duration.Seconds())
 

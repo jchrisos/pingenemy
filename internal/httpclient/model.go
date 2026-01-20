@@ -1,4 +1,4 @@
-package http
+package httpclient
 
 type UrlRequest struct {
 	Name               string `json:"name"`
