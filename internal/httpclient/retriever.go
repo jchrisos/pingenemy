@@ -2,7 +2,7 @@ package httpclient
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 )
@@ -15,12 +15,14 @@ func RetrieveUrlsFromLocalFile() ([]UrlRequest, error) {
 
 	path := filepath.Join(home, ".pingenemy", "urls.json")
 
-	fmt.Printf("Loading url files: %s\n", path)
+	log.Printf("Loading urls file: %s\n", path)
 
 	fileBytes, err := os.ReadFile(path)
 	if err != nil {
+		log.Printf("Error loading urls file: %s", path)
 		file, err := os.Create(path)
 		if err != nil {
+			log.Printf("Error Creating urls file: %s", path)
 			return nil, err
 		}
 		defer file.Close()
@@ -32,8 +34,10 @@ func RetrieveUrlsFromLocalFile() ([]UrlRequest, error) {
 
 		_, err = file.Write(fileBytes)
 		if err != nil {
+			log.Printf("Error writing urls file: %s", path)
 			return nil, err
 		}
+		log.Printf("File created: %s", path)
 	}
 
 	var urlRequests []UrlRequest
