@@ -2,21 +2,25 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
 	"sync"
 	"syscall"
 
-	"github.com/jchrisos/pingenemy/internal/http"
+	"github.com/jchrisos/pingenemy/internal/httpclient"
 	"github.com/jchrisos/pingenemy/internal/job"
 )
 
 func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
-	defer stop()
+	defer func() {
+		fmt.Println("\nJob is done")
+		stop()
+	}()
 
-	urls, err := http.NewUrl().RetriveUrls()
+	urls, err := httpclient.NewUrl().RetriveUrls()
 	if err != nil {
 		log.Fatal(err)
 	}
