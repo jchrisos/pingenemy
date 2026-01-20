@@ -20,15 +20,13 @@ func Execute(ctx context.Context, urlReq *httpclient.UrlRequest) {
 	ticker := time.NewTicker(interval)
 	defer ticker.Stop()
 
-	client := httpclient.NewHttpClient()
-
 	for {
 		select {
 		case <-ctx.Done():
 			return
 		case <-ticker.C:
 			func() {
-				result, err := client.Call(ctx, urlReq)
+				result, err := httpclient.Call(ctx, urlReq)
 				if err != nil {
 					log.Printf("Error calling %s error=%v", urlReq.Name, err)
 				}

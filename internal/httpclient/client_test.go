@@ -18,9 +18,7 @@ func TestCall(t *testing.T) {
 		TimeoutMillis:      5000,
 	}
 
-	client := NewHttpClient()
-
-	result, err := client.Call(t.Context(), url)
+	result, err := Call(t.Context(), url)
 	if err != nil {
 		t.Error(err)
 	}

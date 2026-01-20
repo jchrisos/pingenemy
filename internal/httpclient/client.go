@@ -16,15 +16,7 @@ var (
 	}
 )
 
-type HttpClient struct {
-	timeout time.Duration
-}
-
-func NewHttpClient() *HttpClient {
-	return &HttpClient{}
-}
-
-func (c *HttpClient) Call(ctx context.Context, urlReq *UrlRequest) (UrlResult, error) {
+func Call(ctx context.Context, urlReq *UrlRequest) (UrlResult, error) {
 	httpCtx, cancel := context.WithTimeout(ctx, time.Duration(urlReq.TimeoutMillis)*time.Millisecond)
 	defer cancel()
 
