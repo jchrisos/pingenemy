@@ -2,6 +2,7 @@ package job
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"sync"
@@ -17,10 +18,10 @@ const (
 	urlTextMaxLen   = 50
 )
 
-func Execute(ctx context.Context, urls []httpclient.UrlRequest, intervalSecondsFromArgs int) {
+func Execute(ctx context.Context, urls []httpclient.UrlRequest, intervalFromArgs int) {
 	var interval = intervalSeconds
-	if intervalSecondsFromArgs > 0 {
-		interval = intervalSecondsFromArgs
+	if intervalFromArgs > 0 {
+		interval = intervalFromArgs
 	}
 	var wg sync.WaitGroup
 
@@ -31,7 +32,10 @@ func Execute(ctx context.Context, urls []httpclient.UrlRequest, intervalSecondsF
 		for _, url := range urls {
 			u := url
 			wg.Go(func() {
-				Fetch(ctx, &u)
+				err := Fetch(ctx, &u)
+				if err != nil {
+					return
+				}
 			})
 		}
 	}
@@ -49,13 +53,16 @@ func Execute(ctx context.Context, urls []httpclient.UrlRequest, intervalSecondsF
 	}
 }
 
-func Fetch(ctx context.Context, urlReq *httpclient.UrlRequest) {
+func Fetch(ctx context.Context, urlReq *httpclient.UrlRequest) error {
 	result, err := httpclient.Call(ctx, urlReq)
-	if err != nil {
-		log.Printf("Error calling %s error=%v", urlReq.Name, err)
-	}
-
 	fmt.Println(FormatMessage(*urlReq, *result))
+	if err != nil {
+		if !errors.Is(err, context.DeadlineExceeded) {
+			log.Printf("Error calling %s error=%v", urlReq.Name, err)
+		}
+		return err
+	}
+	return nil
 }
 
 func FormatMessage(urlReq httpclient.UrlRequest, result httpclient.UrlResult) string {

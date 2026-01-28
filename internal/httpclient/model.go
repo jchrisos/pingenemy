@@ -5,8 +5,6 @@ type UrlRequest struct {
 	URL                string `json:"url"`
 	HttpMethod         string `json:"httpMethod"`
 	ExpectedStatusCode int    `json:"expectedStatusCode"`
-	IntervalSeconds    int    `json:"intervalSeconds"`
-	TimeoutMillis      int    `json:"timeoutMillis"`
 }
 
 type UrlResult struct {
@@ -22,8 +20,6 @@ var (
 			URL:                "https://google.com",
 			HttpMethod:         "GET",
 			ExpectedStatusCode: 200,
-			IntervalSeconds:    5,
-			TimeoutMillis:      5000,
 		},
 	}
 )

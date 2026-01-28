@@ -16,8 +16,12 @@ var (
 	}
 )
 
+const (
+	timeoutMillis = 5000
+)
+
 func Call(ctx context.Context, urlReq *UrlRequest) (*UrlResult, error) {
-	httpCtx, cancel := context.WithTimeout(ctx, time.Duration(urlReq.TimeoutMillis)*time.Millisecond)
+	httpCtx, cancel := context.WithTimeout(ctx, timeoutMillis*time.Millisecond)
 	defer cancel()
 
 	req, err := http.NewRequestWithContext(httpCtx, strings.ToUpper(urlReq.HttpMethod), urlReq.URL, nil)
