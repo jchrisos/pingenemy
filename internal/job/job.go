@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"sync"
 	"time"
 
 	httpclient "github.com/jchrisos/pingenemy/internal/httpclient"
@@ -16,34 +17,45 @@ const (
 	urlTextMaxLen   = 50
 )
 
-func Execute(ctx context.Context, urlReq *httpclient.UrlRequest, intervalSecondsFromArgs int) {
+func Execute(ctx context.Context, urls []httpclient.UrlRequest, intervalSecondsFromArgs int) {
 	var interval = intervalSeconds
 	if intervalSecondsFromArgs > 0 {
 		interval = intervalSecondsFromArgs
 	}
+	var wg sync.WaitGroup
 
 	ticker := time.NewTicker(time.Duration(interval) * time.Second)
 	defer ticker.Stop()
 
-	call := func() {
-		result, err := httpclient.Call(ctx, urlReq)
-		if err != nil {
-			log.Printf("Error calling %s error=%v", urlReq.Name, err)
+	exec := func() {
+		for _, url := range urls {
+			u := url
+			wg.Go(func() {
+				Fetch(ctx, &u)
+			})
 		}
-
-		fmt.Println(FormatMessage(*urlReq, *result))
 	}
 
-	call()
+	exec()
 
 	for {
 		select {
 		case <-ticker.C:
-			call()
+			exec()
 		case <-ctx.Done():
+			wg.Wait()
 			return
 		}
 	}
+}
+
+func Fetch(ctx context.Context, urlReq *httpclient.UrlRequest) {
+	result, err := httpclient.Call(ctx, urlReq)
+	if err != nil {
+		log.Printf("Error calling %s error=%v", urlReq.Name, err)
+	}
+
+	fmt.Println(FormatMessage(*urlReq, *result))
 }
 
 func FormatMessage(urlReq httpclient.UrlRequest, result httpclient.UrlResult) string {

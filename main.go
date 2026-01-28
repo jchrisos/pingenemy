@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 	"os/signal"
-	"sync"
 	"syscall"
 
 	"github.com/jchrisos/pingenemy/internal/httpclient"
@@ -27,11 +26,5 @@ func main() {
 		stop()
 	}()
 
-	var wg sync.WaitGroup
-	for _, url := range urls {
-		wg.Go(func() {
-			job.Execute(ctx, &url, *intervalSeconds)
-		})
-	}
-	wg.Wait()
+	job.Execute(ctx, urls, *intervalSeconds)
 }
