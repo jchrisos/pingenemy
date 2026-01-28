@@ -38,10 +38,10 @@ func Execute(ctx context.Context, urlReq *httpclient.UrlRequest, intervalSeconds
 
 	for {
 		select {
-		case <-ctx.Done():
-			return
 		case <-ticker.C:
 			call()
+		case <-ctx.Done():
+			return
 		}
 	}
 }
