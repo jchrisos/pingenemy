@@ -10,14 +10,19 @@ import (
 )
 
 const (
-	successColor = "\033[1;30;102m %s \033[0m"
-	errorColor   = "\033[1;97;101m %s \033[0m"
-	maxLength    = 50
+	intervalSeconds = 60
+	successColor    = "\033[1;30;102m %s \033[0m"
+	errorColor      = "\033[1;97;101m %s \033[0m"
+	urlTextMaxLen   = 50
 )
 
-func Execute(ctx context.Context, urlReq *httpclient.UrlRequest) {
-	interval := time.Duration(urlReq.IntervalSeconds) * time.Second
-	ticker := time.NewTicker(interval)
+func Execute(ctx context.Context, urlReq *httpclient.UrlRequest, intervalSecondsFromArgs int) {
+	var interval = intervalSeconds
+	if intervalSecondsFromArgs > 0 {
+		interval = intervalSecondsFromArgs
+	}
+
+	ticker := time.NewTicker(time.Duration(interval) * time.Second)
 	defer ticker.Stop()
 
 	call := func() {
@@ -46,8 +51,8 @@ func FormatMessage(urlReq httpclient.UrlRequest, result httpclient.UrlResult) st
 	durationFmt := fmt.Sprintf("%.3fs", duration.Seconds())
 
 	urlFmt := urlReq.URL
-	if len(urlReq.URL) > maxLength {
-		urlFmt = urlReq.URL[:maxLength] + "..."
+	if len(urlReq.URL) > urlTextMaxLen {
+		urlFmt = urlReq.URL[:urlTextMaxLen] + "..."
 	}
 
 	message := fmt.Sprintf("%-19s | sc: %-3s | rt: %-6s | %-53s", urlReq.Name, result.StatusCode, durationFmt, urlFmt)

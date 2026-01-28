@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -14,9 +15,11 @@ import (
 )
 
 func main() {
+	intervalSeconds := flag.Int("i", 0, "interval in seconds")
+	flag.Parse()
+
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer func() {
-		fmt.Println("\nJob canceled")
 		stop()
 	}()
 
@@ -29,7 +32,7 @@ func main() {
 
 	for _, url := range urls {
 		wg.Go(func() {
-			job.Execute(ctx, &url)
+			job.Execute(ctx, &url, *intervalSeconds)
 		})
 	}
 
