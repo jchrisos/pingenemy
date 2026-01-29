@@ -70,11 +70,6 @@ func FormatMessage(urlReq httpclient.UrlRequest, result httpclient.UrlResult) st
 	duration := time.Duration(result.ResponseTime) * time.Millisecond
 	durationFmt := fmt.Sprintf("%.3fs", duration.Seconds())
 
-	urlFmt := urlReq.URL
-	if len(urlReq.URL) > urlTextMaxLen {
-		urlFmt = urlReq.URL[:urlTextMaxLen] + "..."
-	}
-
 	loc, _ := time.LoadLocation(location)
 	now := time.Now().In(loc).Format(time.DateTime)
 
@@ -85,5 +80,5 @@ func FormatMessage(urlReq httpclient.UrlRequest, result httpclient.UrlResult) st
 		statusCode = fmt.Sprintf(errorColor, result.StatusCode)
 	}
 
-	return fmt.Sprintf("%s | %-19s | %s | rt: %-6s | %-53s", now, urlReq.Name, statusCode, durationFmt, urlFmt)
+	return fmt.Sprintf("%s | %-19s | %s | rt: %-6s | %s %s", now, urlReq.Name, statusCode, durationFmt, urlReq.HttpMethod, urlReq.URL)
 }
