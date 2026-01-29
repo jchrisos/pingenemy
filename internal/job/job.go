@@ -74,7 +74,10 @@ func FormatMessage(urlReq httpclient.UrlRequest, result httpclient.UrlResult) st
 		urlFmt = urlReq.URL[:urlTextMaxLen] + "..."
 	}
 
-	message := fmt.Sprintf("%-19s | sc: %-3s | rt: %-6s | %-53s", urlReq.Name, result.StatusCode, durationFmt, urlFmt)
+	loc, _ := time.LoadLocation("America/Sao_Paulo")
+	now := time.Now().In(loc).Format(time.DateTime)
+
+	message := fmt.Sprintf("%s | %-19s | sc: %-3s | rt: %-6s | %-53s", now, urlReq.Name, result.StatusCode, durationFmt, urlFmt)
 
 	if result.Success {
 		return fmt.Sprintf(successColor, message)
