@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	intervalSeconds = 60
+	intervalSeconds = 60 * 5 //5 minutes
 	successColor    = "\033[1;30;102m %s \033[0m"
 	errorColor      = "\033[1;97;101m %s \033[0m"
 	urlTextMaxLen   = 50
