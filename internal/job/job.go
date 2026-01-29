@@ -16,6 +16,7 @@ const (
 	successColor    = "\033[1;30;102m %s \033[0m"
 	errorColor      = "\033[1;97;101m %s \033[0m"
 	urlTextMaxLen   = 50
+	location        = "America/Sao_Paulo"
 )
 
 func Execute(ctx context.Context, urls []httpclient.UrlRequest, intervalFromArgs int) {
@@ -74,7 +75,7 @@ func FormatMessage(urlReq httpclient.UrlRequest, result httpclient.UrlResult) st
 		urlFmt = urlReq.URL[:urlTextMaxLen] + "..."
 	}
 
-	loc, _ := time.LoadLocation("America/Sao_Paulo")
+	loc, _ := time.LoadLocation(location)
 	now := time.Now().In(loc).Format(time.DateTime)
 
 	message := fmt.Sprintf("%s | %-19s | sc: %-3s | rt: %-6s | %-53s", now, urlReq.Name, result.StatusCode, durationFmt, urlFmt)
