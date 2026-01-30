@@ -30,10 +30,9 @@ func Execute(ctx context.Context, urls []httpclient.UrlRequest, intervalFromArgs
 	defer ticker.Stop()
 
 	exec := func() {
-		for _, url := range urls {
-			u := url
+		for i := range urls {
 			wg.Go(func() {
-				err := Fetch(ctx, &u)
+				err := Fetch(ctx, &urls[i])
 				if err != nil {
 					return
 				}
