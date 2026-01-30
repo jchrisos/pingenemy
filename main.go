@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
@@ -27,4 +28,6 @@ func main() {
 	}()
 
 	job.Execute(ctx, urls, *intervalSeconds)
+
+	fmt.Println("Pingenemy stopped!")
 }

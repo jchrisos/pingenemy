@@ -48,6 +48,7 @@ func Execute(ctx context.Context, urls []httpclient.UrlRequest, intervalFromArgs
 			exec()
 		case <-ctx.Done():
 			wg.Wait()
+			fmt.Println("Gracefully Stopping...")
 			return
 		}
 	}
