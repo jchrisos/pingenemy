@@ -15,7 +15,6 @@ const (
 	intervalSeconds = 60 * 5 //5 minutes
 	successColor    = "\033[1;30;102m sc: %-3s \033[0m"
 	errorColor      = "\033[1;97;101m sc: %-3s \033[0m"
-	urlTextMaxLen   = 50
 	location        = "America/Sao_Paulo"
 )
 
@@ -73,10 +72,8 @@ func FormatMessage(urlReq httpclient.UrlRequest, result httpclient.UrlResult) st
 	loc, _ := time.LoadLocation(location)
 	now := time.Now().In(loc).Format(time.DateTime)
 
-	var statusCode string
-	if result.Success {
-		statusCode = fmt.Sprintf(successColor, result.StatusCode)
-	} else {
+	statusCode := fmt.Sprintf(successColor, result.StatusCode)
+	if !result.Success {
 		statusCode = fmt.Sprintf(errorColor, result.StatusCode)
 	}
 
