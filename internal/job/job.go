@@ -55,7 +55,7 @@ func Execute(ctx context.Context, urls []httpclient.UrlRequest, intervalFromArgs
 
 func Fetch(ctx context.Context, urlReq *httpclient.UrlRequest) error {
 	result, err := httpclient.Call(ctx, urlReq)
-	fmt.Println(FormatMessage(*urlReq, *result))
+	fmt.Println(formatMessage(*urlReq, *result))
 	if err != nil {
 		if !errors.Is(err, context.DeadlineExceeded) {
 			log.Printf("Error calling %s error=%v", urlReq.Name, err)
@@ -65,9 +65,8 @@ func Fetch(ctx context.Context, urlReq *httpclient.UrlRequest) error {
 	return nil
 }
 
-func FormatMessage(urlReq httpclient.UrlRequest, result httpclient.UrlResult) string {
+func formatMessage(urlReq httpclient.UrlRequest, result httpclient.UrlResult) string {
 	duration := time.Duration(result.ResponseTime) * time.Millisecond
-	durationFmt := fmt.Sprintf("%.3fs", duration.Seconds())
 
 	loc, _ := time.LoadLocation(location)
 	now := time.Now().In(loc).Format(time.DateTime)
@@ -77,5 +76,15 @@ func FormatMessage(urlReq httpclient.UrlRequest, result httpclient.UrlResult) st
 		statusCode = fmt.Sprintf(errorColor, result.StatusCode)
 	}
 
-	return fmt.Sprintf("%s | %-19s | %s | rt: %-6s | %s %s", now, urlReq.Name, statusCode, durationFmt, urlReq.HttpMethod, urlReq.URL)
+	return fmt.Sprintf("%s | %-19s | %s | rt: %-6s | %s %s",
+		now,
+		urlReq.Name,
+		statusCode,
+		formatDuration(duration.Seconds()),
+		urlReq.HttpMethod,
+		urlReq.URL)
+}
+
+func formatDuration(duration float64) string {
+	return fmt.Sprintf("%.3fs", duration)
 }
