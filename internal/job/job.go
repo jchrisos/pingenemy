@@ -29,6 +29,8 @@ func Execute(ctx context.Context, urls []httpclient.UrlRequest, intervalFromArgs
 	defer ticker.Stop()
 
 	exec := func() {
+		start := time.Now()
+
 		for i := range urls {
 			wg.Go(func() {
 				err := Fetch(ctx, &urls[i])
@@ -37,6 +39,10 @@ func Execute(ctx context.Context, urls []httpclient.UrlRequest, intervalFromArgs
 				}
 			})
 		}
+		wg.Wait()
+
+		total := time.Since(start)
+		fmt.Printf("Total execution time: %v\n", formatDuration(float64(total.Seconds())))
 	}
 
 	exec()
