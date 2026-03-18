@@ -29,6 +29,12 @@ func Call(ctx context.Context, urlReq *UrlRequest) (*UrlResult, error) {
 		return nil, err
 	}
 
+	if urlReq.Headers != nil {
+		for k, v := range *urlReq.Headers {
+			req.Header.Add(k, v)
+		}
+	}
+
 	start := time.Now()
 
 	resp, err := http.DefaultClient.Do(req)

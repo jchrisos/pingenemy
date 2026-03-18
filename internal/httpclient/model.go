@@ -1,10 +1,11 @@
 package httpclient
 
 type UrlRequest struct {
-	Name               string `json:"name"`
-	URL                string `json:"url"`
-	HttpMethod         string `json:"httpMethod"`
-	ExpectedStatusCode int    `json:"expectedStatusCode"`
+	Name               string             `json:"name"`
+	URL                string             `json:"url"`
+	HttpMethod         string             `json:"httpMethod"`
+	ExpectedStatusCode int                `json:"expectedStatusCode"`
+	Headers            *map[string]string `json:"headers"`
 }
 
 type UrlResult struct {
@@ -20,6 +21,7 @@ var (
 			URL:                "https://google.com",
 			HttpMethod:         "GET",
 			ExpectedStatusCode: 200,
+			Headers:            &map[string]string{"x-test": "x"},
 		},
 	}
 )
