@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"regexp"
 	"sync"
 	"time"
 
@@ -82,13 +83,15 @@ func formatMessage(urlReq httpclient.UrlRequest, result httpclient.UrlResult) st
 		statusCode = fmt.Sprintf(errorColor, result.StatusCode)
 	}
 
+	re := regexp.MustCompile(`https://[\w\d\.-]+`)
+
 	return fmt.Sprintf("%s | %-19s | %s | rt: %-6s | %s %s",
 		now,
 		urlReq.Name,
 		statusCode,
 		formatDuration(duration.Seconds()),
 		urlReq.HttpMethod,
-		urlReq.URL)
+		re.ReplaceAllString(urlReq.URL, ""))
 }
 
 func formatDuration(duration float64) string {
